@@ -9,20 +9,10 @@
     --background-color: rgb(3, 3, 3);
     --text-color: #ffffff;
     --font-family: 'Host Grotesk', sans-serif;
-    --font-family2: 'Josefin Sans', sans-serif;
-    --font-display: 'Condor Wide', sans-serif;
     --page-padding: clamp(20px, 5vw, 35px);
     --gallery-gap: clamp(20px, 3vw, 100px);
-    --header-height: 81px;
-}
 
-@font-face {
-    font-family: "Condor Wide";
-    src: url("fonts/condor-font-family/Condor-WideMedium-Testing.ttf") format("truetype");
-    font-style: normal;
-    font-display: swap;
 }
-
 html, body {
     width: 100%;
     overflow-x: hidden;
@@ -268,7 +258,6 @@ body.lightbox-open {
 
 
 
-
 /* 1. NAVBAR CONTAINER: The primary anchor for your vertical axis */
 .header-container {
     max-width: none;
@@ -283,16 +272,29 @@ body.lightbox-open {
   align-items: center;
   justify-content: space-between;
   padding: clamp(15px, 5vw, 25px) 0; /* Horizontal MUST be 0 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 4. MAIN CONTENT & GRID PADDING */
-.page-content {
-    flex: 1;
-    padding-top: var(--header-height);
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: clamp(12px, 3vh, 32px);
+/* 3. FILTER BAR: Align PROJECTS/ALL to the same anchor */
+.filter-inner {
+    max-width: none;
+    margin: 0;
+    /* Top 14px, Variable Sides, Bottom 20px */
+    padding: 14px 0 20px 0; 
+    display: flex;
+    align-items: center;
 }
+
+/* 4. MAIN CONTENT & GRID: Clear the extra padding layers */
+.page-content {
+  flex: 1;
+  padding-top: var(--header-height);
+  padding-left: 0; /* Remove horizontal padding here */
+  padding-right: 0;
+  padding-bottom: clamp(12px, 3vh, 32px);
+}
+
+
 
 
 
@@ -457,9 +459,10 @@ body.lightbox-open {
 
 
 
-/* -----------desktop logo------------ */
+/* Mobile icon active (current page) */
 .logo-desktop {
-    height: 30px;
+    height: 25px;
+    max-height: 25px;
     width: auto;
     display: block;
 }
@@ -780,10 +783,6 @@ header {
   transition: transform 0.5s ease;
 }
 
-.nav-spacer {
-    height: var(--header-height);
-}
-
 .nav-wrapper.nav-hidden {
   transform: translateY(-100%);
 }
@@ -885,31 +884,6 @@ header {
 .nav-links a.active::after {
     transform: scaleX(1);
 }
-
-
-
-.services-btn {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: rgba(255, 0, 0, 0.218);
-    border: 1px solid rgba(255, 0, 0, 0.6);
-    color: #fff;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    width: fit-content;
-    transition: all 0.4s ease;
-    margin-top: 0px;
-    margin-bottom: 0; /* Ensures the border is the baseline */
-}
-
-.services-btn:hover {
-    background: #ff0000; /* Solid red fill on hover */
-    color: #fff; /* White text on hover */
-    border-color: #ff0000;
-}
-
 
 
 .contact-nav {
@@ -1135,9 +1109,6 @@ header {
 h1 {
   font-size: 18px;
   letter-spacing: 0.08em;
-
- font-family: var(--font-display);
-    font-weight: 500;
 }
 
 .contact p {
@@ -1154,7 +1125,6 @@ textarea::placeholder {
   color: #777;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.3;
   font-size:12px;
 }
 
@@ -1363,8 +1333,7 @@ button:focus-visible {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     /* This ensures the line is exactly in the middle of the 120px/150px gap */
-    margin: 80px var(--page-padding); 
-
+    margin: 40px 0; 
 }
 
 /* Update your existing margins to keep spacing consistent */
@@ -1452,25 +1421,13 @@ button:focus-visible {
 
 /* 2. Reset the Title margin */
 .hero-title {
-    font-family: var(--font-display);
     font-size: clamp(24px, 3vw, 32px);
-    text-transform: uppercase;
-    line-height: 0.9;
+    line-height: 1.1;
     /* Remove top margin to ensure it sits at the grid's ceiling */
     margin-top: 0; 
     margin-bottom: 10px;
-    letter-spacing: -0.05em;
-    color: var(--text-color);
-
-    /* 
-    font-family: var(--font-display);
-        font-size: clamp(20px, 5vw, 40px);
-        text-transform: uppercase;
-        line-height: 0.8; 
-
-        letter-spacing: -0.05em;
-        color: var(--text-color);
-        */
+    letter-spacing: -0.02em;
+    text-transform: none;
 }
 
 /* 3. Reset the Paragraph margin */
@@ -1695,41 +1652,3 @@ button:focus-visible {
 video {
     filter: brightness(1); 
 }
-
-
-#booking {
-    scroll-margin-top: 50px;
-}
-
-
-.gallery-back {
-    position: static;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 36px;
-    height: 36px;
-    padding: 0;
-
-    background-color: rgba(255, 0, 0, 0.218);
-    border: 1px solid rgba(255, 0, 0, 0.6);
-    border-radius: 50%;
-
-    color: #fff;
-    text-decoration: none;
-
-    font-size: 18px;
-    line-height: 1;
-
-    transition: all 0.4s ease;
-}
-
-.gallery-back:hover {
-    background: #ff0000;
-    border-color: #ff0000;
-    color: #fff;
-}
-
-

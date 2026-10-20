@@ -3,18 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Yershov Studio</title>
-
-    <!-- Site-wide CSS -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="canonical" href="https://yershovstudio.com/"/>
+    
+    <style>
+    /* --- CORE LAYOUT --- */
+    body, html {
+        background-color: var(--background-color);
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+        /* Unlock scrolling for the new services section */
+        overflow-x: hidden;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100%;
+    }
 
-    <!-- Homepage-only CSS -->
-    <link rel="stylesheet" href="index.css">
+    .page-shell {
+        display: flex;
+        flex-direction: column;
+    }
 
-    <link rel="icon" type="image/png" href="/favicon/notext.png">
+    .main-dashboard {
+        display: flex;
+        height: 100vh; /* Fixed height for desktop to keep bars consistent */
+        width: 100vw;
+        padding: 140px var(--page-padding) 0px var(--page-padding); 
+        gap: 15px;
+        box-sizing: border-box;
+        align-items: stretch; /* Forces left and right side to same height */
+    }
 
-    <link rel="canonical" href="https://yershovstudio.com/"> <!-- Tells search engines that yershovstudio.com is my homepage -->
+    /* LEFT SIDE: Branding - ALIGNED TO BOTTOM */
+    .branding-side {
+        flex: 0 0 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* This pushes everything to the bottom baseline */
+        padding-bottom: 0px; /* Adjust if you want a tiny bit of breathing room from the edge */
+        position: relative; /* REQUIRED: Anchors the absolute photo container */
+        overflow: hidden;
+        padding-left: var(--page-padding); 
+        padding-bottom: var(--page-padding); 
+    /* Ensures the image still fills the whole box regardless of padding */
+    box-sizing: border-box;
+    }
+
+    .hero-title {
+        font-family: var(--font-family);
+        font-size: clamp(20px, 5vw, 40px);
+        font-weight: 800;
+        text-transform: uppercase;
+        line-height: 0.8; 
+
+        letter-spacing: 0em;
+        color: var(--text-color);
+    }
+
+    /* The Photo Layer */
+    .branding-photo-bg {
+        position: absolute;
+        inset: 0; /* Short for top:0, right:0, bottom:0, left:0 */
+        z-index: 1; /* Puts photo behind content (default z-index is auto/0) */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        
+        /* Studio Aesthetic: Grayscale + Darkness for Text Clarity */
+        filter: grayscale(100%) brightness(50%); 
+    }
+
+    /* Push all content above the photo */
+    .branding-side h1,
+    .branding-side p,
+    .branding-side a {
+        position: relative;
+        z-index: 2; /* REQUIRED: Makes sure text stays on top */
+    }
+
+    .hero-bio {
+        max-width: 500px;
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.6;
+        opacity: 0.6;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+
+    .services-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: rgba(255, 0, 0, 0.218);
+        border: 1px solid rgba(255, 0, 0, 0.6);
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.3em;
+        width: fit-content;
+        transition: all 0.4s ease;
+        margin-top: 0px;
+        margin-bottom: 0; /* Ensures the border is the baseline */
+    }
+
+    .services-btn:hover {
+        background: #ff0000; /* Solid red fill on hover */
+        color: #fff; /* White text on hover */
+        border-color: #ff0000;
+    }
+    
+
+    /* RIGHT SIDE: Interactive Portal */
+    .portal-side {
+        flex: 1;
+        display: flex;
+        gap: 15px;
+        height: 100%; /* Stretches bars to full dashboard height */
+    }
+
+    .portal-box {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: flex 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        background: #0a0a0a;
+    }
+    /* This applies ONLY to the photography blade */
+    .photo-portal .box-bg {
+        /* Adjust this percentage to get the exact zoom you want */
+        background-size: 80%; 
+        
+        /* Optional: shift the focus (e.g., 50% 20% zooms into the top) */
+        background-position: center center; 
+    }
+
+    .portal-box:hover { flex: 2.5; }
+
+    .box-bg {
+        position: absolute;
+        inset: 0;
+        /* background-size: cover; */
+        background-position: center;
+        background-size: cover; /* Change this to 'cover' */
+        filter: grayscale(100%) brightness(13%);
+        transition: transform 1s ease, filter 0.5s ease;
+    }
+
+    .portal-box:hover .box-bg {
+        filter: grayscale(0%) brightness(40%);
+
+    }
+
+    .portal-box h2 {
+        position: relative;
+        z-index: 10;
+        color: #ffffff !important;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.5em;
+        transition: letter-spacing 0.4s ease;
+    }
+
+    /* --- SERVICES SECTION --- */
+    .services-section {
+        min-height: auto;
+        padding: 0px var(--page-padding) 120px var(--page-padding);
+        background: #050505; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Target the title in the booking section */
+    .services-section .hero-title {
+        /* clamp(MIN, PREFERRED, MAX) */
+        font-size: clamp(28px, 4vw, 40px) !important; 
+        
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        line-height: 1.0;
+    }
+
+    /* Optional: Make the bio text below it slightly smaller too */
+    .services-section .hero-bio {
+        font-size: clamp(12px, 1.5vw, 14px);
+        opacity: 0.8;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-top: 20px;
+    }
+
+    .service-item {
+    background: #111111; /* Dark grey background */
+    padding: 20px;       /* Spacing inside the card */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    }
+
+    /* 3. The Vertical Divider */
+.service-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px; /* Exactly half of the grid gap (80/2) */
+    top: 10%;    /* Line starts 10% from the top */
+    height: 80%; /* Line is 80% tall for a cleaner look */
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1); /* Subtle white line */
+}
+    .service-item:hover {
+    background: #161616; 
+    transition: background 0.4s ease;
+    }
+
+    .service-header {
+    display: flex;
+    align-items: baseline; /* Aligns the bottom of the text perfectly */
+    gap: 15px;            /* Adjust this for the horizontal space between them */
+    margin-bottom: 20px;   /* Consistent gap to the paragraph below */
+    }
+
+    /* Ensure the number maintains its distinct style */
+    .service-num {
+        font-size: 14px;
+        opacity: 0.3;
+        letter-spacing: 0em;
+        white-space: nowrap; /* Prevents the | from wrapping */
+    }
+
+    .service-item p {
+        font-size: 14px;
+        line-height: 1.8;
+        opacity: 0.7; /* Brighter for better readability */
+        font-weight: 300;
+        margin-bottom:0px;
+        flex-grow: 1; /* Pushes the link to the bottom of the box */
+    }
+
+    .service-item h3 {
+        margin-top: 5px;
+        font-size: 24px;
+        line-height: 1.0;
+    }   
+
+
+    /* Red Overlay for the Get in Touch Card */
+    .service-item.red-card {
+        background: rgba(255, 0, 0, 0.08); /* Subtle red tint */
+         /* Gives internal space for the tint to show */
+        border-radius: 0px; /* Optional: adds a slight finish to the card */
+        transition: background 0.4s ease;
+    }
+
+    .service-item.red-card:hover {
+        background: rgba(255, 0, 0, 0.12); /* Slightly deeper on hover */
+    }
+
+    /* Red Styled Button */
+    .services-btn.red-btn {
+        border: 1px solid rgba(255, 0, 0, 0.6); /* Red rectangle border */
+        color: #ffffff; /* Bright red text for visibility */
+        margin-top: auto; /* Pushes button to bottom of card */
+    }
+
+    .services-btn.red-btn:hover {
+        background: #ff0000; /* Solid red fill on hover */
+        color: #fff; /* White text on hover */
+        border-color: #ff0000;
+    }
+
+    /* Ensure the caret in the red button is also handled */
+    .red-btn .caret {
+        color: inherit;
+    }
+
+    .mini-link {
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        font-weight: 600;
+        transition: opacity 0.3s ease;
+    }
+
+
+.mini-link:hover {
+    opacity: 0.5;
+}
+
+    /* --- MOBILE STYLES --- */
+    @media (max-width: 1024px) {
+        .main-dashboard { 
+            flex-direction: column; 
+            height: auto; 
+            padding-top: 80px;
+            padding-bottom: 40px;
+        }
+        
+        .branding-side { 
+            flex: none;
+            justify-content: flex-start; /* Reset bottom alignment for mobile */
+            margin-bottom: 40px; 
+        }
+
+        .portal-side { 
+            height: 70vh; 
+            flex-direction: column; 
+            flex: none;
+        }
+
+        .portal-box { 
+            flex: 1; 
+            height: auto;
+            transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .portal-box:hover { flex: 3; }
+    }
+</style>
 </head>
 
 <body class="page-gallery">
@@ -25,22 +345,44 @@
                  <div class="header-container">
                     <div class="header-inner">
 
-                        <!-- Left nav -->
+                        <!-- Left -->
                         <div class="header-left">
                             <a href="/" class="icon-link" aria-label="Home">
-                                <img src="SVG/notext.svg" class="logo-mobile">
-                                <img src="SVG/logo-desktop5_3.svg" class="logo-desktop">
+                                <img src="SVG/logo-mobile2.svg" class="logo-mobile">
+                                <img src="SVG/logo-desktop4.svg" class="logo-desktop">
                             </a>
                         </div>
 
 
-                        <!-- Right nav -->
-                        <div class="header-right"> 
-                            <!-- --------------- Mobile nav ------------------- -->
-                            <div class="menu-toggle" id="mobile-menu"> <!-- hamburger -->
+                        <!-- Right -->
+                        <div class="header-right">
+
+                            <!-- Desktop nav -->
+                            <nav class="nav-links desktop-nav">
+                                <a href="photo/">Gallery</a>
+                                <a href="design.html">Design</a>
+                                <a href="about/">About</a>
+                                <a href="contact/" class="contact-nav">Contact</a>
+                            </nav>
+
+                            <!-- Mobile nav -->
+
+
+
+                            <div class="menu-toggle" id="mobile-menu">
                                 <span></span>
                                 <span></span>
                                  <span></span>
+                            </div>
+
+                            <div class="overlay" id="nav-overlay">
+                                <nav class="overlay-menu">
+                                    <a href="/" class="active">Home</a>
+                                    <a href="photo/">Gallery</a>
+                                    <!-- <a href="design.html">Design</a> -->
+                                    <a href="about/">About</a>
+                                    <a href="contact/">Contact</a>
+                                </nav>
                             </div>
 
                         </div>
@@ -50,853 +392,94 @@
             </header>
         </div>
 
-<!------------------------------ DASHBOARD --------------------------------->
-
-        <main class="main-dashboard" id ="top">
+        <main class="main-dashboard">
             <section class="branding-side">
-                <div class="branding-photo-bg" style="background-image: url('profilepic.png');"></div>
-                <div class="hero-heading-row">
+                <div class="branding-photo-bg" style="background-image: url('profilepic2.jpg');"></div>
                 <h1 class="hero-title">Oleg<br>Yershov</h1>
-                </div>
-
-                <div class="hero-dropdown">
-                    <div class="hero-bio-wrap">
-                        <p class="hero-bio">
-                            I’m a portrait photographer based in Lowell, Massachusetts, specializing in storytelling through the use of unique environments and concepts.
-                            To me, portraiture goes beyond the final images—it’s about the connection we build as we bring the ideas to life.
-                        </p>
-
-                        <button
-                            class="hero-bio-toggle"
-                            type="button"
-                            aria-expanded="false"
-                            aria-label="Show full description"
-                        >
-                            ↓
-                        </button>
-                    </div>
-                    <div class="hero-buttons">
-                        <a href="#services" class="services-btn">
-                            Bookings & Info <span class="caret">↓</span>
-                        </a>
-
-                        <a href="photo/" class="services-btn">
-                            View Gallery
-                        </a>
-                    </div>
-                </div>
+                <p class="hero-bio">
+                    I'm a creative director & photographer located in Lowell Massachusetts, specializing in editorial portraiture through the use of unique environments.
+                </p>
+                <a href="#services" class="services-btn">Info / Services <span class="caret">↓</span></a>
             </section>
 
+            <section class="portal-side">
+                <a href="photo.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock2-2.jpg');"></div>
+                    <h2>Gallery</h2>
+                </a>
 
-            <!-- Matching image positions form one shoot: first images land first,
-                 then second images, etc. Keep all three lists the same length.
-                 Ramp, spin, slowdown, and hold values below are milliseconds. No duplicate lists needed. -->
-            <section class="gallery-marquee" data-ramp-ms="800" data-spin-ms="200" data-slowdown-ms="1500" data-hold-ms="500" data-drift-px-per-second="8">
+                <a href="about.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock4-2.jpg');"></div>
+                    <h2>About</h2>
+                </a>
 
-                <!-- COLUMN 1 — UP -->
-                <div class="gallery-column scroll-up">
-                    <div class="gallery-column-track">
-
-                        <div class="gallery-column-set">
-                            <img src="./junk/junk1.jpg" alt="">
-                            <img src="./nicole/nicole2.jpg" alt="">
-                           
-                            <img src="./julia/julia.jpg" alt="">
-                            <img src="melissa/melissa.jpg" alt="">
-                            <img src="./kaylie/kaylie-4.jpg" alt="">
-                            <img src="Cyn/cyn7.png" alt="">
-                            <!-- <img src="alter/alter.jpg" alt=""> -->
-                            <img src="Sean/sean01.png" alt="">
-                            <img src="ian/ian.jpg" alt="">
-                        </div>
-
-
-                    </div>
-                </div>
-
-
-                <!-- COLUMN 2 — DOWN -->
-                <div class="gallery-column scroll-down">
-                    <div class="gallery-column-track">
-
-                        <div class="gallery-column-set">
-                            <img src="./junk/junk2.jpg" alt="">
-                            <img src="./nicole/nicole.jpg" alt="">
-                            
-                            <img src="./julia/julia2.jpg" alt="">
-                            <img src="melissa/melissa-2.jpg" alt="">
-                            <img src="./kaylie/kaylie-2.jpg" alt="">
-                            <img src="Cyn/cyn16.png" alt="">
-                            <!-- <img src="alter/alter-5.jpg" alt=""> -->
-                            <img src="Sean/sean03.png" alt="">
-                            <img src="ian/ian-4.jpg" alt="">
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!-- COLUMN 3 — UP -->
-                <div class="gallery-column scroll-up">
-                    <div class="gallery-column-track">
-
-                        <div class="gallery-column-set">
-                            <img src="./junk/junk3.jpg" alt="">
-                            <img src="./nicole/nicole3.jpg" alt="">
-                             
-                            <img src="./julia/julia3.jpg" alt="">
-                            <img src="melissa/melissa-3.jpg" alt="">
-                            <img src="./kaylie/kaylie-6.jpg" alt="">
-                            <img src="Cyn/cyn13.png" alt="">
-                            <!-- <img src="alter/alter-6.jpg" alt=""> -->
-                            <img src="Sean/sean06.png" alt="">
-                            <img src="ian/ian-7.jpg" alt="">
-                        </div>
-
-                
-
-                    </div>
-                </div>
+                <a href="contact.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock3-2.jpg');"></div>
+                    <h2>Contact</h2>
+                </a>
             </section>
         </main>
 
 
         <hr class="section-divider">
-        <section id="services"></section>
 
-        <section class="services-section">
-            <h2 class="hero-title">The  Process</h2>
+        <section id="services" class="services-section">
+            <h2 class="hero-title" style="font-size: 40px; margin-bottom: 10px; margin-top: 0;">Booking Info</h2>
+            <p class="hero-bio" style="opacity: 0.8;">Currently accepting select projects for Summer 2026.</p>
 
             <div class="services-grid">
-
                 <div class="service-item">
-                    <div class="service-heading">
-                        <span class="service-num">01 |</span>
-                        <h3>Consultation</h3>
-                        <span class="service-caret">﹀</span>
-                    </div>
-
-                    <p>We begin with a discussion to define your project goals and create a moodboard to visualize ideas. We discuss the aesthetic direction, outfits, makeup, and location, to create the best possible results.</p>
+                    <span class="service-num">01</span> <h3>Consultation</h3>
+                    <p>We begin with a discussion to define your project goals and create a Pinterest board to visualize ideas. We discuss the aesthetic direction, outfit ideas, and location to create the best possible results.</p>
+                    <br><br>
+                    <!-- <strong>Rates available upon inquiry</strong></p> -->
                 </div>
 
                 <div class="service-item">
-                    <div class="service-heading">
-                        <span class="service-num">02 |</span>
-                        <h3>Photography </h3>
-                        <span class="service-caret">﹀</span>
-                    </div>
-
-                    <p>On the shoot day, we execute the plan in a studio or on-location. This phase is entirely focused on visual storytelling, using lighting, poses, and experimentation to capture your emotions within the environment.</p>
+                    <span class="service-num">02</span>
+                    <h3>Production & Creation</h3>
+                    <p>On the shoot day, we execute the plan in a studio or on-location. This phase is entirely focused on visual storytelling, using lighting, poses and the environment to capture imagery that tells your unique story.</p>
+                    <br><br>
+                    <!-- <strong>Rate: Project-Dependent</strong></p> -->
                 </div>
 
-                <div class="service-item">
-                    <div class="service-heading">
-                        <span class="service-num">03 |</span>
-                        <h3>Editing & Delivery</h3>
-                        <span class="service-caret">﹀</span>
-                    </div>
-
+                <div class="service-item red-card">
+                    <span class="service-num">03</span> <h3>Editing & Delivery</h3>
                     <p>Post-production is where the final look is polished. You receive all of the files from the shoot, mark the photos you want edited, and I deliver a gallery of professionally edited images formatted for your specific needs.</p>
+                    <a href="contact/" class="services-btn red-btn">Contact Me <span class="caret">→</span></a>
                 </div>
-
             </div>
         </section>
 
-        <hr class="section-divider">
-        <section id="pricing"></section>
+        <!--
 
-        <section class="home-pricing-section">
+        <section id="services" class="services-section">
+            <h2 class="hero-title" style="font-size: 40px; margin-bottom: 10px; margin-top: 0;">Booking & Commissions</h2>
+            <p class="hero-bio" style="opacity: 0.8;">Currently accepting select projects for Summer 2026.</p>
 
-            <div class="home-pricing-left">
-                <div class="home-pricing-title">
-                    <h2>Sessions</h2>
+            <div class="services-grid">
+                <div class="service-item">
+                    <span class="service-num">01</span> <h3>Photography</h3>
+                    <p>Studio and location sessions are focused on visual storytelling that match your vision – every project is approached with a focus on unique environments and editorial direction.
+                    <br><br>
                 </div>
 
-                <p class="home-price-note">
-                    Listed rates apply to each person photographed. A $30 deposit is required after your session request is approved to reserve your date. <br>The deposit is applied toward your session total, and the remaining balance is due after the photoshoot.
-                </p>
+                <div class="service-item">
+                    <span class="service-num">02</span>
+                    <h3>Design Commissions</h3>
+                    <p>Specializing in branding, UI/UX systems, & prototyping. Delivering production-ready design solutions for commercial and artistic use.
+                    <br><br>
+                </div>
+
+                <div class="service-item red-card">
+                    <span class="service-num">03</span> <h3>Get in Touch</h3>
+                    <p>To start a project, send an email with your concept or project requirements, including general info regarding dates & project details. Rates are available upon inquiry.</p>
+                    <a href="contact.html" class="services-btn red-btn">Contact Me <span class="caret">→</span></a>
+                </div>
             </div>
-
-
-            <div class="home-pricing-list">
-
-
-                <!-- ================= STUDIO ================= -->
-
-                <article
-                    class="home-pricing-row pricing-select"
-                    data-service="studio"
-                    role="button"
-                    tabindex="0"
-                >
-
-                    <div class="home-pricing-header">
-                        <h3>Studio Portraits</h3>
-                        <div class="home-price-group">
-                            <span class="home-price">$125</span>
-                            <span class="student-price-note">$25 off for all students</span>
-                        </div>
-                    </div>
-
-
-                    <div class="home-pricing-main">
-
-                        <div class="pricing-detail">
-
-                            <h3 class="pricing-detail-title">
-                                Overview
-                                <span class="pricing-detail-caret">⌄</span>
-                            </h3>
-
-                            <p class="pricing-detail-content">
-                                A studio session using creative lighting
-                                and a focused production environment. The studio space may vary
-                                depending on availability, but will be within the Lowell area.
-                            </p>
-
-                        </div>
-
-                        <div class="pricing-detail">
-
-                            <h3 class="pricing-detail-title">
-                                The Details
-                                <span class="pricing-detail-caret">⌄</span>
-                            </h3>
-
-                            <p class="pricing-detail-content">
-                                2 hour studio session. Up to 2 looks / outfits.
-                                Receive all photos from the shoot, as well as 10
-                                professionally edited images within 7 days after selection.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- CAROUSEL -->
-
-                    <div class="pricing-carousel">
-
-                        <button
-                            class="pricing-carousel-arrow pricing-carousel-arrow-left"
-                            type="button"
-                            aria-label="Move gallery left"
-                        >
-                            ‹
-                        </button>
-
-
-                        <div class="pricing-carousel-window">
-
-                            <div class="pricing-carousel-track">
-
-                                <div class="pricing-carousel-set">
-                                    <img src="./Sean/sean01.png" alt="">
-                                    <img src="./kaylie/kaylie-3.jpg" alt="">
-                                    <img src="./Koray/KK02.png" alt="">
-                                    <img src="./Cyn/cyn13.png" alt="">
-                                    <img src="./ian/ian-4.jpg" alt="">
-                                    <img src="./alter/alter-6.jpg" alt="">
-                                    <img src="./will/guitar.jpg" alt="">
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            class="pricing-carousel-arrow pricing-carousel-arrow-right"
-                            type="button"
-                            aria-label="Move gallery right"
-                        >
-                            ›
-                        </button>
-
-                    </div>
-
-                </article>
-
-
-
-                <!-- ================= ON LOCATION ================= -->
-
-                <article
-                    class="home-pricing-row pricing-select"
-                    data-service="on-location"
-                    role="button"
-                    tabindex="0"
-                >
-
-                    <div class="home-pricing-header">
-                        <h3>On-Location Portraits</h3>
-                        <div class="home-price-group">
-                            <span class="home-price">$175</span>
-                            <span class="student-price-note">$25 off for all students</span>
-                        </div>
-                    </div>
-
-
-                    <div class="home-pricing-main">
-
-                        <div class="pricing-detail">
-                            
-                            <h3 class="pricing-detail-title">
-                                Overview
-                                <span class="pricing-detail-caret">⌄</span>
-                            </h3>
-
-                            <p class="pricing-detail-content">
-                                An editorial portrait session built around the interaction
-                                with a unique environment through directed posing. The proposed location must be within Eastern New England.
-                            </p>
-                            
-                        </div>
-
-
-                        <div class="pricing-detail">
-
-                            <h3 class="pricing-detail-title">
-                                The Details
-                                <span class="pricing-detail-caret">⌄</span>
-                            </h3>
-
-                            <p class="pricing-detail-content">
-                                2 hour on-location session. Up to 2 looks / outfits.
-                                Receive all photos from the shoot, as well as 10
-                                professionally edited images within 7 days after selection.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- CAROUSEL -->
-
-                    <div class="pricing-carousel">
-
-                        <button
-                            class="pricing-carousel-arrow pricing-carousel-arrow-left"
-                            type="button"
-                            aria-label="Move gallery left"
-                        >
-                        ‹
-                        </button>
-
-
-                        <div class="pricing-carousel-window">
-
-                            <div class="pricing-carousel-track">
-
-                                <div class="pricing-carousel-set">
-                                    <img src="./junk2/junk1.jpg" alt="">
-                                    <img src="./nicole/nicole-compressed2.jpg" alt="">
-                                    <img src="./faima/754A9891-1.jpg" alt="">
-                                    <img src="./lily/2.jpg" alt="">
-                                    
-                                    <img src="./castle/01.jpg" alt="">
-                                    
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            class="pricing-carousel-arrow pricing-carousel-arrow-right"
-                            type="button"
-                            aria-label="Move gallery right"
-                        >
-                        ›
-                        </button>
-
-                    </div>
-
-                </article>
-
-
-            </div>
-
         </section>
 
-
-
-        <hr class="section-divider">
-        <section id="booking"></section>
-
-
-        
-
-       <!-- REQUEST A SESSION -->
-<section class="home-booking-section">
-
-    <div class="booking-layout">
-
-
-        <!-- ================= LEFT COLUMN ================= -->
-        <div class="booking-left">
-
-            <div class="home-section-heading-left">
-
-                <h2>Request a Session</h2>
-
-                <p>
-                    Select a preferred date and tell me what you want to create.
-                    Your date is not officially reserved until the request is approved,
-                    and the booking deposit needs to be paid before the session takes place.
-                </p>
-
-            </div>
-
-
-            <!-- CALENDAR -->
-            <div class="calendar-panel">
-
-                <div class="calendar-head">
-
-                    <button
-                        class="calendar-arrow"
-                        id="prevMonth"
-                        type="button"
-                        aria-label="Previous month">
-                        ←
-                    </button>
-
-                    <div>
-                        <h3 id="calendarMonth"></h3>
-                    </div>
-
-                    <button
-                        class="calendar-arrow"
-                        id="nextMonth"
-                        type="button"
-                        aria-label="Next month">
-                        →
-                    </button>
-
-                </div>
-
-
-                <div class="calendar-weekdays" aria-hidden="true">
-                    <span>S</span>
-                    <span>M</span>
-                    <span>T</span>
-                    <span>W</span>
-                    <span>T</span>
-                    <span>F</span>
-                    <span>S</span>
-                </div>
-
-
-                <div
-                    class="calendar-grid"
-                    id="calendarGrid">
-                </div>
-
-            </div>
-            <!-- END CALENDAR -->
-
-        </div>
-        <!-- ================= END LEFT COLUMN ================= -->
-
-
-
-        <!-- ================= RIGHT COLUMN ================= -->
-
-        <form
-            class="booking-form"
-            id="bookingForm"
-            action="https://formspree.io/f/xaeybyqv"
-            method="POST"
-        >
-
-            <input type="hidden" name="_subject" value="New Photography Booking Request">
-
-            <input
-                type="hidden"
-                name="preferred_date"
-                id="preferredDate"
-            >
-
-            <div class="booking-fields">
-
-                <!-- NAME + EMAIL -->
-                <div class="form-row form-row--two">
-
-                    <label>
-
-                        <span>Name *</span>
-
-                        <input
-                            type="text"
-                            name="name"
-                            required
-                            autocomplete="name"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Email *</span>
-
-                        <input
-                            type="email"
-                            name="email"
-                            required
-                            autocomplete="email"
-                        >
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- INSTAGRAM + SESSION TYPE -->
-                <div class="form-row form-row--two">
-
-                    <label>
-
-                        <span>Instagram</span>
-
-                        <input
-                            type="text"
-                            name="instagram"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>Session Type *</span>
-
-                        <select
-                            name="session_type"
-                            required
-                        >
-
-                            <option value="">
-                                Select one
-                            </option>
-
-                            <option>
-                                On-Location Portraits
-                            </option>
-
-                            <option>
-                                Studio Portraits
-                            </option>
-
-                            <option>
-                                Custom Request
-                            </option>
-
-                        </select>
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- PREFERRED DATE -->
-                <div class="form-row">
-
-                    <label>
-
-                        <span>Preferred Date *</span>
-
-                        <input
-                            type="text"
-                            id="preferredDateDisplay"
-                            placeholder="Select a date from the calendar"
-                            readonly
-                            aria-required="true"
-                        >
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- LOCATION -->
-                <div class="form-row">
-
-                    <label>
-
-                        <span>Location / Area</span>
-
-                        <input
-                            type="text"
-                            name="location"
-                        >
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- CONCEPT -->
-                <div class="form-row">
-
-                    <label>
-
-                        <span>Concept / Vibe *</span>
-
-                        <textarea
-                            name="concept"
-                            rows="5"
-                            required
-                            placeholder="Tell me what you want to create! add a pinterest link, mention inspiration, outfits, & anything else."
-                        ></textarea>
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- PEOPLE + REFERRAL -->
-                <div class="form-row form-row--two">
-
-                    <label>
-
-                        <span>Number of People</span>
-
-                        <input
-                            type="number"
-                            name="people"
-                            min="1"
-                            value="1"
-                        >
-
-                    </label>
-
-
-                    <label>
-
-                        <span>How did you find me?</span>
-
-                        <input
-                            type="text"
-                            name="referral"
-                        >
-
-                    </label>
-
-                </div>
-
-
-
-                <!-- BOOKING SUMMARY -->
-                <div class="booking-summary">
-
-                    <div>
-
-                        <span class="summary-label">
-                            SELECTED DATE
-                        </span>
-
-                        <strong id="summaryDate">
-                            No date selected
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span class="summary-label">
-                            BOOKING DEPOSIT
-                        </span>
-
-                        <strong>
-                            $30 after approval
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- SUBMIT -->
-            <div class="booking-submit-row">
-
-                    <button
-                        class="services-btn red-btn booking-submit"
-                        type="submit">
-
-                        Submit Request
-
-                    </button>
-
-                    <p class="form-fineprint">
-                        Submitting this form sends a booking request, not an automatic
-                        confirmation. I’ll follow up to confirm availability, details,
-                        and to secure the $30 deposit.
-                    </p>
-
-                </div>
-
-                <p class="form-status" id="formStatus" aria-live="polite"></p>
-
-            </div>
-
-        </form>
-
-        <!-- ================= END RIGHT COLUMN ================= -->
-
-
-    </div>
-
-</section>
-
-
-        <hr class="section-divider">
-        <section id="policies"></section>
-
-
-        <!------------ INFO & POLICIES -------------->
-        <section class="home-policies-section">
-
-            <div class="policies-left">
-
-                <div class="home-section-heading">
-                    <h2>Info &<br>Policies</h2>
-                </div>
-
-                <!-- QUESTION FORM -->
-                <form
-                    class="policy-question-box"
-                    action="https://formspree.io/f/xaeybyqv"
-                    method="POST"
-                >
-
-                    <input
-                        type="hidden"
-                        name="_subject"
-                        value="New Website Question"
-                    >
-
-                    <label for="policyQuestion">Send me a message</label>
-
-                    <div class="policy-combined-field">
-
-                        <textarea
-                            id="policyQuestion"
-                            name="message"
-                            rows="4"
-                            placeholder="Enter your question"
-                            required
-                        ></textarea>
-
-                        <div class="policy-combined-bottom">
-
-                            <input
-                                type="email"
-                                id="policyEmail"
-                                name="email"
-                                placeholder="Email address"
-                                required
-                            >
-
-                            <button type="submit" class="policy-send-btn">
-                                Send
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-
-            <div class="faq-list">
-
-                <details>
-                    <summary>
-                        How is my date reserved?
-                        <span>+</span>
-                    </summary>
-
-                    <p>
-                        Your date is reserved after I approve the session details
-                        and the $30 booking deposit is paid. The remaining balance
-                        is due according to the terms provided with your booking.
-                    </p>
-                </details>
-
-
-                <details>
-                    <summary>
-                        What happens if the weather is bad?
-                        <span>+</span>
-                    </summary>
-
-                    <p>
-                        For outdoor sessions, we can reschedule when weather would
-                        prevent us from creating the planned work. We’ll make that
-                        decision as the session approaches.
-                    </p>
-                </details>
-
-
-                <details>
-                    <summary>
-                        Can I bring multiple outfits?
-                        <span>+</span>
-                    </summary>
-
-                    <p>
-                        Yes. Outfit changes can be planned during the consultation
-                        so they support the concept and fit comfortably within the
-                        session.
-                    </p>
-                </details>
-
-
-                <details>
-                    <summary>
-                        How do I choose my final photos?
-                        <span>+</span>
-                    </summary>
-
-                    <p>
-                        You’ll receive a proof gallery of all the photos after the shoot and select
-                        the images you want professionally edited. I will pick out my favorites as well.
-                    </p>
-                </details>
-
-
-                <details>
-                    <summary>
-                        Do you travel?
-                        <span>+</span>
-                    </summary>
-
-                    <p>
-                        Yes. Sessions more than 2 hours from the Lowell area may include an
-                        additional travel fee depending on distance.
-                    </p>
-                </details>
-
-            </div>
-
-        </section>
-
-
+        -->
 
 
         <footer class="site-footer">
@@ -906,40 +489,6 @@
             </div>
         </footer>
     </div>
-
-
-
-    <nav class="section-indicator" aria-label="Page sections">
-
-        
-        <button data-section="top" class="active">
-            <span class="indicator-dot"></span>
-            <span class="indicator-label">Home</span>
-        </button>
-
-        <button data-section="services">
-            <span class="indicator-dot"></span>
-            <span class="indicator-label">The Process</span>
-        </button>
-
-        <button data-section="pricing">
-            <span class="indicator-dot"></span>
-            <span class="indicator-label">Sessions</span>
-        </button>
-
-        <button data-section="booking">
-            <span class="indicator-dot"></span>
-            <span class="indicator-label">Request a Session</span>
-        </button>
-
-        <button data-section="policies">
-            <span class="indicator-dot"></span>
-            <span class="indicator-label">Info & Policies</span>
-        </button>
-    </nav>
     <script src="script.js"></script>
-    
 </body>
-
-
 </html>
