@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yershov Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="canonical" href="https://yershovstudio.com/"/>
+    
+    <style>
+    /* --- CORE LAYOUT --- */
+    body, html {
+        background-color: var(--background-color);
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+        /* Unlock scrolling for the new services section */
+        overflow-x: hidden;
+        overflow-y: auto !important;
+        height: auto !important;
+        min-height: 100%;
+    }
+
+    .page-shell {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-dashboard {
+        display: flex;
+        height: 100vh; /* Fixed height for desktop to keep bars consistent */
+        width: 100vw;
+        padding: 140px var(--page-padding) 0px var(--page-padding); 
+        gap: 15px;
+        box-sizing: border-box;
+        align-items: stretch; /* Forces left and right side to same height */
+    }
+
+    /* LEFT SIDE: Branding - ALIGNED TO BOTTOM */
+    .branding-side {
+        flex: 0 0 35%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* This pushes everything to the bottom baseline */
+        padding-bottom: 0px; /* Adjust if you want a tiny bit of breathing room from the edge */
+        position: relative; /* REQUIRED: Anchors the absolute photo container */
+        overflow: hidden;
+        padding-left: var(--page-padding); 
+        padding-bottom: var(--page-padding); 
+    /* Ensures the image still fills the whole box regardless of padding */
+    box-sizing: border-box;
+    }
+
+    .hero-title {
+        font-family: var(--font-family);
+        font-size: clamp(20px, 5vw, 40px);
+        font-weight: 800;
+        text-transform: uppercase;
+        line-height: 0.8; 
+
+        letter-spacing: 0em;
+        color: var(--text-color);
+    }
+
+    /* The Photo Layer */
+    .branding-photo-bg {
+        position: absolute;
+        inset: 0; /* Short for top:0, right:0, bottom:0, left:0 */
+        z-index: 1; /* Puts photo behind content (default z-index is auto/0) */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        
+        /* Studio Aesthetic: Grayscale + Darkness for Text Clarity */
+        filter: grayscale(100%) brightness(50%); 
+    }
+
+    /* Push all content above the photo */
+    .branding-side h1,
+    .branding-side p,
+    .branding-side a {
+        position: relative;
+        z-index: 2; /* REQUIRED: Makes sure text stays on top */
+    }
+
+    .hero-bio {
+        max-width: 500px;
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.6;
+        opacity: 0.6;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+
+    .services-btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: rgba(255, 0, 0, 0.218);
+        border: 1px solid rgba(255, 0, 0, 0.6);
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.3em;
+        width: fit-content;
+        transition: all 0.4s ease;
+        margin-top: 0px;
+        margin-bottom: 0; /* Ensures the border is the baseline */
+    }
+
+    .services-btn:hover {
+        background: #ff0000; /* Solid red fill on hover */
+        color: #fff; /* White text on hover */
+        border-color: #ff0000;
+    }
+    
+
+    /* RIGHT SIDE: Interactive Portal */
+    .portal-side {
+        flex: 1;
+        display: flex;
+        gap: 15px;
+        height: 100%; /* Stretches bars to full dashboard height */
+    }
+
+    .portal-box {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: flex 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        background: #0a0a0a;
+    }
+    /* This applies ONLY to the photography blade */
+    .photo-portal .box-bg {
+        /* Adjust this percentage to get the exact zoom you want */
+        background-size: 80%; 
+        
+        /* Optional: shift the focus (e.g., 50% 20% zooms into the top) */
+        background-position: center center; 
+    }
+
+    .portal-box:hover { flex: 2.5; }
+
+    .box-bg {
+        position: absolute;
+        inset: 0;
+        /* background-size: cover; */
+        background-position: center;
+        background-size: cover; /* Change this to 'cover' */
+        filter: grayscale(100%) brightness(13%);
+        transition: transform 1s ease, filter 0.5s ease;
+    }
+
+    .portal-box:hover .box-bg {
+        filter: grayscale(0%) brightness(40%);
+
+    }
+
+    .portal-box h2 {
+        position: relative;
+        z-index: 10;
+        color: #ffffff !important;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.5em;
+        transition: letter-spacing 0.4s ease;
+    }
+
+    /* --- SERVICES SECTION --- */
+    .services-section {
+        min-height: auto;
+        padding: 0px var(--page-padding) 120px var(--page-padding);
+        background: #050505; 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* Target the title in the booking section */
+    .services-section .hero-title {
+        /* clamp(MIN, PREFERRED, MAX) */
+        font-size: clamp(28px, 4vw, 40px) !important; 
+        
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        line-height: 1.0;
+    }
+
+    /* Optional: Make the bio text below it slightly smaller too */
+    .services-section .hero-bio {
+        font-size: clamp(12px, 1.5vw, 14px);
+        opacity: 0.8;
+    }
+
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-top: 20px;
+    }
+
+    .service-item {
+    background: #111111; /* Dark grey background */
+    padding: 20px;       /* Spacing inside the card */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    }
+
+    /* 3. The Vertical Divider */
+.service-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px; /* Exactly half of the grid gap (80/2) */
+    top: 10%;    /* Line starts 10% from the top */
+    height: 80%; /* Line is 80% tall for a cleaner look */
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1); /* Subtle white line */
+}
+    .service-item:hover {
+    background: #161616; 
+    transition: background 0.4s ease;
+    }
+
+    .service-header {
+    display: flex;
+    align-items: baseline; /* Aligns the bottom of the text perfectly */
+    gap: 15px;            /* Adjust this for the horizontal space between them */
+    margin-bottom: 20px;   /* Consistent gap to the paragraph below */
+    }
+
+    /* Ensure the number maintains its distinct style */
+    .service-num {
+        font-size: 14px;
+        opacity: 0.3;
+        letter-spacing: 0em;
+        white-space: nowrap; /* Prevents the | from wrapping */
+    }
+
+    .service-item p {
+        font-size: 14px;
+        line-height: 1.8;
+        opacity: 0.7; /* Brighter for better readability */
+        font-weight: 300;
+        margin-bottom:0px;
+        flex-grow: 1; /* Pushes the link to the bottom of the box */
+    }
+
+    .service-item h3 {
+        margin-top: 5px;
+        font-size: 24px;
+        line-height: 1.0;
+    }   
+
+
+    /* Red Overlay for the Get in Touch Card */
+    .service-item.red-card {
+        background: rgba(255, 0, 0, 0.08); /* Subtle red tint */
+         /* Gives internal space for the tint to show */
+        border-radius: 0px; /* Optional: adds a slight finish to the card */
+        transition: background 0.4s ease;
+    }
+
+    .service-item.red-card:hover {
+        background: rgba(255, 0, 0, 0.12); /* Slightly deeper on hover */
+    }
+
+    /* Red Styled Button */
+    .services-btn.red-btn {
+        border: 1px solid rgba(255, 0, 0, 0.6); /* Red rectangle border */
+        color: #ffffff; /* Bright red text for visibility */
+        margin-top: auto; /* Pushes button to bottom of card */
+    }
+
+    .services-btn.red-btn:hover {
+        background: #ff0000; /* Solid red fill on hover */
+        color: #fff; /* White text on hover */
+        border-color: #ff0000;
+    }
+
+    /* Ensure the caret in the red button is also handled */
+    .red-btn .caret {
+        color: inherit;
+    }
+
+    .mini-link {
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        font-weight: 600;
+        transition: opacity 0.3s ease;
+    }
+
+
+.mini-link:hover {
+    opacity: 0.5;
+}
+
+    /* --- MOBILE STYLES --- */
+    @media (max-width: 1024px) {
+        .main-dashboard { 
+            flex-direction: column; 
+            height: auto; 
+            padding-top: 80px;
+            padding-bottom: 40px;
+        }
+        
+        .branding-side { 
+            flex: none;
+            justify-content: flex-start; /* Reset bottom alignment for mobile */
+            margin-bottom: 40px; 
+        }
+
+        .portal-side { 
+            height: 70vh; 
+            flex-direction: column; 
+            flex: none;
+        }
+
+        .portal-box { 
+            flex: 1; 
+            height: auto;
+            transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .portal-box:hover { flex: 3; }
+    }
+</style>
+</head>
+
+<body class="page-gallery">
+    <div class="page-shell">
+        
+        <div class="nav-wrapper">
+            <header>
+                 <div class="header-container">
+                    <div class="header-inner">
+
+                        <!-- Left -->
+                        <div class="header-left">
+                            <a href="/" class="icon-link" aria-label="Home">
+                                <img src="SVG/logo-mobile2.svg" class="logo-mobile">
+                                <img src="SVG/logo-desktop4.svg" class="logo-desktop">
+                            </a>
+                        </div>
+
+
+                        <!-- Right -->
+                        <div class="header-right">
+
+                            <!-- Desktop nav -->
+                            <nav class="nav-links desktop-nav">
+                                <a href="photo/">Gallery</a>
+                                <a href="design.html">Design</a>
+                                <a href="about/">About</a>
+                                <a href="contact/" class="contact-nav">Contact</a>
+                            </nav>
+
+                            <!-- Mobile nav -->
+
+
+
+                            <div class="menu-toggle" id="mobile-menu">
+                                <span></span>
+                                <span></span>
+                                 <span></span>
+                            </div>
+
+                            <div class="overlay" id="nav-overlay">
+                                <nav class="overlay-menu">
+                                    <a href="/" class="active">Home</a>
+                                    <a href="photo/">Gallery</a>
+                                    <!-- <a href="design.html">Design</a> -->
+                                    <a href="about/">About</a>
+                                    <a href="contact/">Contact</a>
+                                </nav>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <main class="main-dashboard">
+            <section class="branding-side">
+                <div class="branding-photo-bg" style="background-image: url('profilepic2.jpg');"></div>
+                <h1 class="hero-title">Oleg<br>Yershov</h1>
+                <p class="hero-bio">
+                    I'm a creative director & photographer located in Lowell Massachusetts, specializing in editorial portraiture through the use of unique environments.
+                </p>
+                <a href="#services" class="services-btn">Info / Services <span class="caret">↓</span></a>
+            </section>
+
+            <section class="portal-side">
+                <a href="photo.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock2-2.jpg');"></div>
+                    <h2>Gallery</h2>
+                </a>
+
+                <a href="about.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock4-2.jpg');"></div>
+                    <h2>About</h2>
+                </a>
+
+                <a href="contact.html" class="portal-box">
+                    <div class="box-bg" style="background-image: url('rock3-2.jpg');"></div>
+                    <h2>Contact</h2>
+                </a>
+            </section>
+        </main>
+
+
+        <hr class="section-divider">
+
+        <section id="services" class="services-section">
+            <h2 class="hero-title" style="font-size: 40px; margin-bottom: 10px; margin-top: 0;">Booking Info</h2>
+            <p class="hero-bio" style="opacity: 0.8;">Currently accepting select projects for Summer 2026.</p>
+
+            <div class="services-grid">
+                <div class="service-item">
+                    <span class="service-num">01</span> <h3>Consultation</h3>
+                    <p>We begin with a discussion to define your project goals and create a Pinterest board to visualize ideas. We discuss the aesthetic direction, outfit ideas, and location to create the best possible results.</p>
+                    <br><br>
+                    <!-- <strong>Rates available upon inquiry</strong></p> -->
+                </div>
+
+                <div class="service-item">
+                    <span class="service-num">02</span>
+                    <h3>Production & Creation</h3>
+                    <p>On the shoot day, we execute the plan in a studio or on-location. This phase is entirely focused on visual storytelling, using lighting, poses and the environment to capture imagery that tells your unique story.</p>
+                    <br><br>
+                    <!-- <strong>Rate: Project-Dependent</strong></p> -->
+                </div>
+
+                <div class="service-item red-card">
+                    <span class="service-num">03</span> <h3>Editing & Delivery</h3>
+                    <p>Post-production is where the final look is polished. You receive all of the files from the shoot, mark the photos you want edited, and I deliver a gallery of professionally edited images formatted for your specific needs.</p>
+                    <a href="contact/" class="services-btn red-btn">Contact Me <span class="caret">→</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!--
+
+        <section id="services" class="services-section">
+            <h2 class="hero-title" style="font-size: 40px; margin-bottom: 10px; margin-top: 0;">Booking & Commissions</h2>
+            <p class="hero-bio" style="opacity: 0.8;">Currently accepting select projects for Summer 2026.</p>
+
+            <div class="services-grid">
+                <div class="service-item">
+                    <span class="service-num">01</span> <h3>Photography</h3>
+                    <p>Studio and location sessions are focused on visual storytelling that match your vision – every project is approached with a focus on unique environments and editorial direction.
+                    <br><br>
+                </div>
+
+                <div class="service-item">
+                    <span class="service-num">02</span>
+                    <h3>Design Commissions</h3>
+                    <p>Specializing in branding, UI/UX systems, & prototyping. Delivering production-ready design solutions for commercial and artistic use.
+                    <br><br>
+                </div>
+
+                <div class="service-item red-card">
+                    <span class="service-num">03</span> <h3>Get in Touch</h3>
+                    <p>To start a project, send an email with your concept or project requirements, including general info regarding dates & project details. Rates are available upon inquiry.</p>
+                    <a href="contact.html" class="services-btn red-btn">Contact Me <span class="caret">→</span></a>
+                </div>
+            </div>
+        </section>
+
+        -->
+
+
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <span class="footer-left">© 2026</span>
+                <span class="footer-right">CREATED BY OLEG YERSHOV</span>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
