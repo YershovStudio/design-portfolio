@@ -1173,8 +1173,33 @@ button:focus-visible {
 
 
 
+.about-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    margin: 0 auto;
+}
+
+.about-image {
+    flex: 0 0 35%;
+    margin-top: 1.2em;
+}
+
+.about-image img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.about-text {
+    flex: 1;
+    min-width: 0;
+}
+
 .about {
-  max-width: 600px;
+  max-width: 1000px;
   width: 100%;
   padding-left: clamp(20px, 4vw, 60px);
   padding-right: clamp(20px, 4vw, 60px);
@@ -1207,6 +1232,8 @@ button:focus-visible {
   font-size: clamp(13px, 1.2vw, 15px);
   line-height: 1.55;
   letter-spacing: -0.01em;
+  padding-top: 0;
+  margin-top: 0;
 }
 
 .site-footer {
@@ -1240,6 +1267,8 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
 }
+
+
 
 
 
