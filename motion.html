@@ -19,56 +19,60 @@
         <div class="nav-wrapper">
             <header>
                 <div class="header-container">
-                    <div class="header-inner">
+                <div class="header-inner">
+                    
+                    <div class="header-left">
+                    <a href="index.html" class="icon-link">
+                        <img src="SVG/logo-mobile2.svg" class="logo-mobile" alt="Yershov Studio">
+                        <img src="SVG/logo-desktop4.svg" class="logo-desktop" alt="Yershov Studio">
+                    </a>
+                    </div>
 
-                        <!-- Left -->
-                        <div class="header-left">
-                            <a href="index.html" class="icon-link" aria-label="Home">
-                                <img src="SVG/logo-mobile2.svg" class="logo-mobile">
-                                <img src="SVG/logo-desktop4.svg" class="logo-desktop">
-                            </a>
-                        </div>
+                    <!-- Right -->
+                    <div class="header-right">
+                    <!-- Desktop nav -->
+                    <nav class="nav-links desktop-nav">
+                        <a href="index.html" class="active">Work</a>
+                        <a href="about.html">About</a>
+                        <a href="contact.html" class="contact-nav">Contact</a>
+                    </nav>
 
+                    <!-- Mobile nav -->
+                    <div class="menu-toggle" id="mobile-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
 
-                        <!-- Right -->
-                        <div class="header-right">
+                    <div class="overlay" id="nav-overlay">
+                        <nav class="overlay-menu">
+                            <a href="index.html" class="active">Work>
+                            <a href="about.html">About</a>
+                            <a href="contact.html">Contact</a>
+                        </nav>
+                    </div>
 
-                            <!-- Desktop nav -->
-                            <nav class="nav-links desktop-nav">
-                                <a href="photo.html">Photography</a>
-                                <a href="design.html" class="active">Design</a>
-                                <a href="about.html">About</a>
-                                <a href="contact.html" class="contact-nav">Contact</a>
-                            </nav>
-
-                            <!-- Mobile nav -->
-                            <div class="menu-toggle" id="mobile-menu">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-
-                            <div class="overlay" id="nav-overlay">
-                                <nav class="overlay-menu">
-                                <a href="index.html">Home</a>
-                                    <a href="photo.html">Photo</a>
-                                    <a href="design.html"class="active">Design</a>
-                                    <a href="about.html">About</a>
-                                    <a href="contact.html">Contact</a>
-                                </nav>
-                            </div>
-
-                        </div>
 
                     </div>
 
-                    <div class="filter-bar">
-                        <div class="filter-inner">
-                            <a href="design.html" class="filter-btn active" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">←</a>
+
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-inner">
+                        <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="branding"></button>
+                        <button class="filter-btn" data-filter="graphic"></button>   
+                        <!-- <button class="filter-btn" data-filter="all">All</button> -->               
                         </div>
                     </div>
                 </div>
-                
+                <div class="filter-bar">
+                    <div class="filter-inner">
+                        <a href="index.html" class="filter-btn active" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">←</a>
+                    </div>
+                </div>
+                </div>
             </header>
         </div> 
 

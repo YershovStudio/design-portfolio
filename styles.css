@@ -1554,7 +1554,7 @@ button:focus-visible {
     margin: 0 auto;
     border: 0.5px #575757 solid;
     background: #030303;
-    transition: max-width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     overflow: hidden;
 }
 
@@ -1572,7 +1572,7 @@ button:focus-visible {
     /* 4. Use 'cover' or 'contain' to ensure images don't distort */
     object-fit: contain; 
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.8s ease-in-out;
 }
 
 .flip-page.active {
@@ -1680,4 +1680,92 @@ button:focus-visible {
 /* Ensure the video doesn't look 'washed out' compared to images */
 video {
     filter: brightness(1); 
+}
+
+
+
+/* Magazine images: two columns */
+.landscape-hero.magazine-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.magazine-grid > .landscape-wrapper {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    margin: 0;
+}
+
+.magazine-grid > .landscape-wrapper > img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Realistic magazine reader */
+.magazine-reader {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#magazineBook {
+    margin: 0 auto;
+}
+
+.magazine-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.magazine-controls button {
+    padding: 12px 18px;
+    border: 1px solid #575757;
+    background: #030303;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.magazine-controls button:hover {
+    background: #fff;
+    color: #000;
+}
+
+.magazine-controls button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+#magazineStatus {
+    text-align: center;
+    font-size: 13px;
+}
+
+
+/* Full-resolution images inside the animated pages */
+#magazineBook .magazine-page {
+    background: #fff;
+    overflow: hidden;
+}
+
+#magazineBook .magazine-page img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    object-fit: contain;
+    image-rendering: auto;
+}
+
+#magazineBook {
+    margin: 0 auto;
+    transition: opacity 0.4s ease;
 }

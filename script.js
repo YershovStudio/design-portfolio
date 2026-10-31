@@ -265,45 +265,184 @@ navLinks.forEach(link => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const flipbook = document.getElementById('myFlipbook');
-    if (!flipbook) return;
+/* ---------------- MAGAZINE PAGE TURNS ---------------- */
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('magazineBook');
+    if (!container) return;
 
-    const pages = flipbook.querySelectorAll('.flip-page');
-    const nextBtn = flipbook.querySelector('.next');
-    const prevBtn = flipbook.querySelector('.prev');
-    let currentIndex = 0;
+    const reader = container.closest('.magazine-reader');
+    const previous = document.getElementById('magazinePrev');
+    const next = document.getElementById('magazineNext');
+    const autoButton = document.getElementById('magazineAuto');
+    const status = document.getElementById('magazineStatus');
 
-    function updatePage(newIndex) {
-        pages[currentIndex].classList.remove('active');
-        
-        // Loop index
-        currentIndex = (newIndex + pages.length) % pages.length;
-        
-        pages[currentIndex].classList.add('active');
+    // advert_01.jpg ... advert_36.jpg (change 36 if the page count changes)
+    const pageCount = 36;
+    const pageImages = Array.from({ length: pageCount }, (_, i) =>
+        `magazine/Pages/advert_${String(i + 1).padStart(2, '0')}.jpg`
+    );
 
-       // --- THE UPDATED EXPANSION LOGIC ---
-        const isFirstPage = (currentIndex === 0);
-        const isLastPage = (currentIndex === pages.length - 1);
+    // TIMING SETTINGS (milliseconds)
+    const openingDelay = 300;     // wait before the cover opens
+    const readingDelay = 3000;    // pause on each spread
+    const turningDuration = 500;  // length of the page-turn animation
 
-        if (isFirstPage || isLastPage) {
-            // Shrink to single-page width (550px)
-            flipbook.classList.remove('is-spread');
-        } else {
-            // Expand to double-page width (1100px)
-            flipbook.classList.add('is-spread');
+    previous.disabled = true;
+    next.disabled = true;
+    autoButton.disabled = true;
+    status.textContent = 'Loading magazine…';
+
+    let loadedImages;
+
+    try {
+        if (!window.St?.PageFlip) {
+            throw new Error('The page-flip library could not load.');
         }
+
+        loadedImages = await Promise.all(
+            pageImages.map(src => new Promise((resolve, reject) => {
+                const image = new Image();
+                image.onload = () => resolve(image);
+                image.onerror = () => reject(new Error(`Could not load ${src}`));
+                image.src = src;
+            }))
+        );
+    } catch (error) {
+        status.textContent = error.message;
+        return;
     }
 
-    nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        updatePage(currentIndex + 1);
+    const pageWidth = 550;
+    const pageHeight = Math.round(
+        pageWidth * loadedImages[0].naturalHeight / loadedImages[0].naturalWidth
+    );
+
+    const book = new St.PageFlip(container, {
+        width: pageWidth,
+        height: pageHeight,
+        size: 'stretch',
+        minWidth: 280,
+        maxWidth: pageWidth,
+        minHeight: Math.round(280 * pageHeight / pageWidth),
+        maxHeight: pageHeight,
+        showCover: true,
+        usePortrait: true,
+        autoSize: true,
+        drawShadow: true,
+        maxShadowOpacity: 0.35,
+        flippingTime: turningDuration,
+        mobileScrollSupport: false
     });
 
-    prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        updatePage(currentIndex - 1);
+    let timer = null;
+    let visible = false;
+    let ready = false;
+    let turning = false;
+    let opened = false;
+    let autoplay = true;
+
+    function stopTimer() {
+        clearTimeout(timer);
+        timer = null;
+    }
+
+    function atEnd() {
+        return book.getCurrentPageIndex() >= book.getPageCount() - 1;
+    }
+
+    function updateControls() {
+        previous.disabled = book.getCurrentPageIndex() === 0;
+        next.disabled = atEnd();
+    }
+
+    // Runs a page turn, then unlocks once the animation should be done.
+    function turn(direction) {
+        if (!ready || turning) return;
+
+        stopTimer();
+        turning = true;
+        opened = true;
+
+        if (direction === 'next') book.flipNext('bottom');
+        else book.flipPrev('bottom');
+
+        setTimeout(() => {
+            turning = false;
+            updateControls();
+            scheduleTurn();
+        }, turningDuration + 150);
+    }
+
+    // Fade out, jump back to the cover, fade back in.
+    function restart() {
+        stopTimer();
+        turning = true;
+        container.style.opacity = '0';
+
+        setTimeout(() => {
+            book.turnToPage(0);
+            container.style.opacity = '1';
+            updateControls();
+
+            setTimeout(() => {
+                turning = false;
+                scheduleTurn();   // cover shows for readingDelay, then opens again
+            }, 400);
+        }, 400);
+    }
+
+    function scheduleTurn() {
+        stopTimer();
+
+        if (!ready || !visible || !autoplay || turning || document.hidden) return;
+
+        timer = setTimeout(() => {
+            if (atEnd()) restart();
+            else turn('next');
+        }, opened ? readingDelay : openingDelay);
+    }
+
+    book.on('init', () => {
+        console.log('Magazine ready');
+        ready = true;
+        status.textContent = '';
+        autoButton.disabled = false;
+        updateControls();
+        scheduleTurn();
     });
+
+    book.on('flip', updateControls);
+
+    previous.addEventListener('click', () => turn('prev'));
+    next.addEventListener('click', () => turn('next'));
+
+    autoButton.addEventListener('click', () => {
+        autoplay = !autoplay;
+        autoButton.textContent = autoplay ? 'Pause autoplay' : 'Resume autoplay';
+        scheduleTurn();
+    });
+
+    // Only autoplay while the magazine is on screen.
+    const observer = new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        console.log('Magazine visible:', visible);
+        scheduleTurn();
+    }, { threshold: 0.1 });
+
+    observer.observe(reader);
+    document.addEventListener('visibilitychange', scheduleTurn);
+
+    const htmlPages = loadedImages.map((image, index) => {
+        const page = document.createElement('div');
+        page.className = 'magazine-page';
+        image.alt = `Magazine page ${index + 1}`;
+        image.draggable = false;
+        page.appendChild(image);
+        container.appendChild(page);
+        return page;
+    });
+
+    book.loadFromHTML(htmlPages);
 });
 
 

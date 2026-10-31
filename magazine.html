@@ -19,56 +19,60 @@
         <div class="nav-wrapper">
             <header>
                 <div class="header-container">
-                    <div class="header-inner">
+                <div class="header-inner">
+                    
+                    <div class="header-left">
+                    <a href="index.html" class="icon-link">
+                        <img src="SVG/logo-mobile2.svg" class="logo-mobile" alt="Yershov Studio">
+                        <img src="SVG/logo-desktop4.svg" class="logo-desktop" alt="Yershov Studio">
+                    </a>
+                    </div>
 
-                        <!-- Left -->
-                        <div class="header-left">
-                            <a href="index.html" class="icon-link" aria-label="Home">
-                                <img src="SVG/logo-mobile2.svg" class="logo-mobile">
-                                <img src="SVG/logo-desktop4.svg" class="logo-desktop">
-                            </a>
-                        </div>
+                    <!-- Right -->
+                    <div class="header-right">
+                    <!-- Desktop nav -->
+                    <nav class="nav-links desktop-nav">
+                        <a href="index.html" class="active">Work</a>
+                        <a href="about.html">About</a>
+                        <a href="contact.html" class="contact-nav">Contact</a>
+                    </nav>
 
+                    <!-- Mobile nav -->
+                    <div class="menu-toggle" id="mobile-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
 
-                        <!-- Right -->
-                        <div class="header-right">
+                    <div class="overlay" id="nav-overlay">
+                        <nav class="overlay-menu">
+                            <a href="index.html" class="active">Work</a>
+                            <a href="about.html">About</a>
+                            <a href="contact.html">Contact</a>
+                        </nav>
+                    </div>
 
-                            <!-- Desktop nav -->
-                            <nav class="nav-links desktop-nav">
-                                <a href="photo.html">Photography</a>
-                                <a href="design.html" class="active">Design</a>
-                                <a href="about.html">About</a>
-                                <a href="contact.html" class="contact-nav">Contact</a>
-                            </nav>
-
-                            <!-- Mobile nav -->
-                            <div class="menu-toggle" id="mobile-menu">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-
-                            <div class="overlay" id="nav-overlay">
-                                <nav class="overlay-menu">
-                                <a href="index.html">Home</a>
-                                    <a href="photo.html">Photo</a>
-                                    <a href="design.html"class="active">Design</a>
-                                    <a href="about.html">About</a>
-                                    <a href="contact.html">Contact</a>
-                                </nav>
-                            </div>
-
-                        </div>
 
                     </div>
 
-                    <div class="filter-bar">
-                        <div class="filter-inner">
-                            <a href="design.html" class="filter-btn active" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">←</a>
+
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-inner">
+                        <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="branding"></button>
+                        <button class="filter-btn" data-filter="graphic"></button>   
+                        <!-- <button class="filter-btn" data-filter="all">All</button> -->               
                         </div>
                     </div>
                 </div>
-                
+                <div class="filter-bar">
+                    <div class="filter-inner">
+                        <a href="index.html" class="filter-btn active" style="text-decoration: none; display: flex; align-items: center; gap: 8px;">←</a>
+                    </div>
+                </div>
+                </div>
             </header>
         </div> 
 
@@ -100,171 +104,96 @@
 
 
 
-                <section class="landscape-hero">
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag-mock.png" alt="Description of work">
+               
+
+                <section class="magazine-reader" aria-label="Interactive magazine">
+                    <div id="magazineBook"></div>
+
+                    <div class="magazine-controls">
+                        <button id="magazinePrev" type="button" aria-label="Previous page">
+                            ←
+                        </button>
+
+                        <button id="magazineAuto" type="button">
+                            Pause autoplay
+                        </button>
+
+                        <button id="magazineNext" type="button" aria-label="Next page">
+                            →
+                        </button>
                     </div>
 
-                    <hr class="section-divider">
+                    <p id="magazineStatus" role="status"></p>
                 </section>
 
-                <section class="landscape-hero flip-section">
-                    
-                    <div class="landscape-wrapper flipbook" id="myFlipbook">
-                        <div class="flipbook-screen">
-                            <!-- Each image is a full spread -->
-                            <img src="magazine/mag.jpg" class="flip-page active">
-                            <img src="magazine/mag2.jpg" class="flip-page">
-                            <img src="magazine/mag4.jpg" class="flip-page">
-                            <img src="magazine/mag5.jpg" class="flip-page">
-                            <img src="magazine/mag6.jpg" class="flip-page">
-                            <img src="magazine/mag7.jpg" class="flip-page">
-                            <img src="magazine/mag8.jpg" class="flip-page">
-                            <img src="magazine/mag9.jpg" class="flip-page">
-                            <img src="magazine/mag10.jpg" class="flip-page">
-                            <img src="magazine/mag11.jpg" class="flip-page">
-                            <img src="magazine/mag12.jpg" class="flip-page">
-                            <img src="magazine/mag13.jpg" class="flip-page">
-                            <img src="magazine/mag14.jpg" class="flip-page">
-                            <img src="magazine/mag15.jpg" class="flip-page">
-                            <img src="magazine/mag16.jpg" class="flip-page">
-                            <img src="magazine/mag17.jpg" class="flip-page">
-                            <img src="magazine/mag18.jpg" class="flip-page">
-                            <img src="magazine/mag19.jpg" class="flip-page">
-                        </div>
-
-                        <!-- Arrows nested inside the wrapper so they align with the image edges -->
-                        <div class="flip-nav">
-                            <button class="flip-arrow prev">←</button>
-                            <button class="flip-arrow next">→</button>
-                        </div>
-                    </div>
-                </section>
+                
 
                 <hr class="section-divider">
+
                 
-                <section class="landscape-hero">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/backad.png" alt="Description of work">
-                    </div>
-
-                    <hr class="section-divider">
-                </section>
-
-                <!--
-                <section class="landscape-hero">
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag2.jpg">
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag3.jpg">
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag4.jpg">
-                    </div>
-
-                    <hr class="section-divider">
+               <section class="landscape-hero magazine-grid">
+                    
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag5.jpg">
                     </div>
 
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag6.jpg">
-                    </div>
-
-                    <hr class="section-divider">
+                  
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag7.jpg">
-                    </div>
+                    </div> 
 
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag8.jpg">
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag9.jpg">
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag10.jpg">
-                    </div>
-
-                    <hr class="section-divider">
+                  
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag11.jpg">
                     </div>
 
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag12.jpg">
-                    </div>
-
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag13.jpg">
-                    </div>
-
-                    <hr class="section-divider">
+                   
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag14.jpg">
                     </div>
 
-                    <hr class="section-divider">
+                    
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag15.jpg">
                     </div>
 
-                    <hr class="section-divider">
+                  
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag16.jpg">
                     </div>
 
-                    <hr class="section-divider">
+                   
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag17.jpg">
                     </div>
 
-                    <hr class="section-divider">
+          
 
                     <div class="landscape-wrapper">
                         <img src="magazine/mag18.jpg">
-                    </div>
+                    </div> 
 
-                    <hr class="section-divider">
-
-                    <div class="landscape-wrapper">
-                        <img src="magazine/mag19.jpg">
-                    </div>
                 </section>
+                <hr class="section-divider">
+                
+
+                <section class="landscape-hero">
+
+                        <div class="landscape-wrapper">
+                            <img src="magazine/backad.png" alt="Description of work">
+                        </div>
+
+                    </section>
 
             </div>
-        -->
+   
         </main>
 
     
@@ -287,6 +216,8 @@
             </div>
         </footer>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
