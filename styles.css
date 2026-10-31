@@ -1769,3 +1769,163 @@ video {
     margin: 0 auto;
     transition: opacity 0.4s ease;
 }
+
+
+/* ---------------- SPREAD BREAKDOWN ---------------- */
+
+/* Intro text for each article: same two-column split as the page intro */
+.spread-text {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 32px;
+}
+
+.spread-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: 10px;
+}
+
+.spread-title {
+    font-size: clamp(18px, 2vw, 22px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.spread-body p {
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    opacity: 0.9;
+    margin: 0 0 1em;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+}
+
+.spread-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Two spreads side by side */
+.spread-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.spread {
+    margin: 0;
+    min-width: 0;
+}
+
+.spread .landscape-wrapper {
+    max-width: none;
+}
+
+.spread figcaption {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    opacity: 0.55;
+    margin-top: 12px;
+}
+
+.spread figcaption strong {
+    font-weight: 500;
+    opacity: 1;
+    color: #fff;
+}
+
+/* Phones: stack everything in one column */
+@media (max-width: 768px) {
+    .spread-text {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .spread-pair {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+/* ---------------- FLOATING BACK ARROW ---------------- */
+
+.back-float {
+    position: fixed;
+    top: 50%;
+    left: max(var(--page-padding), calc((100vw - 1100px) / 4));
+    transform: translate(-50%, -50%);
+    z-index: 900;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-float-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.back-float-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.back-float:hover {
+    color: #fff;
+}
+
+.back-float:hover .back-float-arrow {
+    border-color: #fff;
+}
+
+.back-float:hover .back-float-label {
+    opacity: 1;
+}
+
+@media (max-width: 1280px) {
+    .back-float {
+        display: none;
+    }
+}
+
+
+.spread-body p,
+.spread figcaption,
+.intro-text p,
+.about-text {
+    text-wrap: pretty;
+}
+
+
+
+* {
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+}
+
+

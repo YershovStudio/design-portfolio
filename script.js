@@ -321,12 +321,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         width: pageWidth,
         height: pageHeight,
         size: 'stretch',
-        minWidth: 280,
+
+        minWidth: 120,                                   // was 280
         maxWidth: pageWidth,
-        minHeight: Math.round(280 * pageHeight / pageWidth),
+        minHeight: Math.round(120 * pageHeight / pageWidth),  // was 280 * ...
         maxHeight: pageHeight,
+
         showCover: true,
-        usePortrait: true,
+        usePortrait: false,                              // was true
         autoSize: true,
         drawShadow: true,
         maxShadowOpacity: 0.35,
@@ -418,7 +420,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     autoButton.addEventListener('click', () => {
         autoplay = !autoplay;
-        autoButton.textContent = autoplay ? 'Pause autoplay' : 'Resume autoplay';
+
+        autoButton.textContent = autoplay ? '❚❚' : '▶\uFE0E';
+        autoButton.setAttribute('aria-label', autoplay ? 'Pause autoplay' : 'Resume autoplay');
+
         scheduleTurn();
     });
 
