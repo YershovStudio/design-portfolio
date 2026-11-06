@@ -276,11 +276,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const autoButton = document.getElementById('magazineAuto');
     const status = document.getElementById('magazineStatus');
 
-    // advert_01.jpg ... advert_36.jpg (change 36 if the page count changes)
-    const pageCount = 36;
-    const pageImages = Array.from({ length: pageCount }, (_, i) =>
-        `magazine/Pages/advert_${String(i + 1).padStart(2, '0')}.jpg`
-    );
+    // A page can supply its own images through data-pages.
+    // The magazine keeps its original 36 pages by default.
+    const pageImages = container.dataset.pages
+        ? JSON.parse(container.dataset.pages)
+        : Array.from({ length: 36 }, (_, i) =>
+            `magazine/Pages/advert_${String(i + 1).padStart(2, '0')}.jpg`
+        );
 
     // TIMING SETTINGS (milliseconds)
     const openingDelay = 300;     // wait before the cover opens
@@ -300,12 +302,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         loadedImages = await Promise.all(
-            pageImages.map(src => new Promise((resolve, reject) => {
+            pageImages.map(async src => {
                 const image = new Image();
-                image.onload = () => resolve(image);
-                image.onerror = () => reject(new Error(`Could not load ${src}`));
+                image.loading = 'eager';
                 image.src = src;
-            }))
+
+                // Wait until the pixels are ready before creating the flipbook.
+                try {
+                    await image.decode();
+                } catch {
+                    throw new Error(`Could not load or decode ${src}`);
+                }
+
+                return image;
+            })
         );
     } catch (error) {
         status.textContent = error.message;
